@@ -23,7 +23,7 @@ const Navbar = () => {
         className="w-28 lg:w-32 cursor-pointer"
       />
       <div className="hidden md:flex items-center gap-5 text-gray-500">
-        <div>
+        <div className="md:flex items-center gap-2">
           {" "}
           {user && (
             <>
