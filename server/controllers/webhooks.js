@@ -4,6 +4,8 @@ import User from "../models/userModel.js";
 export const clerkWebHooks = async (req, res) => {
   try {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
+    console.log(process.env.CLERK_WEBHOOK_SECRET);
+    
     await whook.verify(JSON.stringify(req.body), {
       "svix-id": req.headers["svix-id"],
       "svix-timestamp": req.headers["svix-timestamp"],
@@ -11,12 +13,13 @@ export const clerkWebHooks = async (req, res) => {
     });
 
     const { data, type } = req.body;
+    console.log(`Webhook received: ${type}`, data);
 
     switch (type) {
       case "user.created": {
         const userData = {
           _id: data.id,
-          email: data.email_address[0].email_address,
+          email: data.email_addresses[0].email_address,
           name: data.first_name + " " + data.last_name,
           imageUrl: data.image_url
         };
@@ -28,7 +31,7 @@ export const clerkWebHooks = async (req, res) => {
 
       case "user.updated": {
         const userData = {
-          email: data.email_address[0].email_address,
+          email: data.email_addresses[0].email_address,
           name: data.first_name + " " + data.last_name,
           imageUrl: data.image_url
         };
@@ -45,9 +48,11 @@ export const clerkWebHooks = async (req, res) => {
       }
 
       default: 
-      break;
+        res.status(400).json({ success: false, message: "Unhandled event type" });
+        break;
     }
   } catch (error) {
-    res.json({success: false, message: error.message})
+    console.error("Error processing webhook:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
