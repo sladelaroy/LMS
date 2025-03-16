@@ -3,11 +3,36 @@ import { Link } from "react-router-dom";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
+  const { navigate, isEducator, backendUrl, setIsEducator, getToken } =
+    useContext(AppContext);
   const { openSignIn } = useClerk();
   const { user } = useUser();
-  const {navigate, isEducator} = useContext(AppContext)
+  const becomeEducator = async () => {
+    try {
+      if (isEducator) {
+        navigate("/educator/");
+        return;
+      } else {
+        const token = await getToken();
+        const { data } = await axios.get(
+          backendUrl + "/api/educator/update-role",
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (data.success) {
+          setIsEducator(true);
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const isCourseListPage = location.pathname.includes("/course-list");
   return (
@@ -17,7 +42,7 @@ const Navbar = () => {
       }`}
     >
       <img
-      onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
         src={assets.logo}
         alt="logo"
         className="w-28 lg:w-32 cursor-pointer"
@@ -27,8 +52,10 @@ const Navbar = () => {
           {" "}
           {user && (
             <>
-              <button onClick={() => navigate('/')}>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button> |{" "}
-              <Link to="/my-enrollments">My Enrollments</Link>
+              <button onClick={() => becomeEducator()}>
+                {isEducator ? "Educator Dashboard" : "Become Educator"}
+              </button>{" "}
+              | <Link to="/my-enrollments">My Enrollments</Link>
             </>
           )}
         </div>
@@ -47,8 +74,10 @@ const Navbar = () => {
         <div className="flex items-center gap-1 sm:gap-2 max-sm:text-xs">
           {user && (
             <>
-              <button onClick={() => navigate('/')}>{isEducator ? 'Educator Dashboard' : 'Become Educator'}</button> |{" "}
-              <Link to="/my-enrollments">My Enrollments</Link>
+              <button onClick={() => becomeEducator()}>
+                {isEducator ? "Educator Dashboard" : "Become Educator"}
+              </button>{" "}
+              | <Link to="/my-enrollments">My Enrollments</Link>
             </>
           )}
         </div>

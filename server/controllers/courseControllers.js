@@ -1,7 +1,5 @@
 import Course from "../models/courseModel.js";
 
-
-
 export const getAllCourse = async (req, res) => {
   try {
     const courses = await Course.find({ isPublished: true })
@@ -11,8 +9,9 @@ export const getAllCourse = async (req, res) => {
       });
 
     res.json({ success: true, courses });
-  } catch (error) {}
-  res.json({ success: false, message: error.message });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
 };
 
 export const getCourseId = async (req, res) => {
@@ -35,5 +34,3 @@ export const getCourseId = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
-

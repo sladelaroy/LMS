@@ -76,7 +76,7 @@ export const stripeWebhooks = async (request, response) => {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
+    return response.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   switch (event.type) {
@@ -101,7 +101,9 @@ export const stripeWebhooks = async (request, response) => {
       userData.enrolledCourses.push(courseData._id);
       await userData.save();
 
-      purchaseData.data.save();
+      
+      purchaseData.status = 'completed'
+      await purchaseData.save();
 
       console.log("PaymentIntent was successful!");
       break;

@@ -3,7 +3,7 @@ import { addUserRating, getUserCourseProgress, getuserData, purchaseCourse, upda
 
 const userRouter = express.Router()
 
-userRouter.get('/userData', getuserData)
+userRouter.get('/data', getuserData)
 userRouter.get('/enrolled-courses', userEnrolledCourses)
 userRouter.post('/purchase', purchaseCourse)
 
