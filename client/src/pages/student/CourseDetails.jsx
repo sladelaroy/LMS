@@ -27,6 +27,8 @@ const CourseDetails = () => {
     getToken
   } = useContext(AppContext);
 
+  console.log(courseData);
+
   const fetchCourseData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/course/" + id);
@@ -132,7 +134,10 @@ const CourseDetails = () => {
           </div>
 
           <p className="text-sm">
-            Course by <span className="text-blue-600 underline">{courseData.educator.name}</span>
+            Course by <span className="text-blue-600 underline">
+              {courseData.educator.name}
+
+            </span>
           </p>
           <div className="pt-8 text-gray-800">
             <h2 className="text-xl font-semibold">Course Structure</h2>

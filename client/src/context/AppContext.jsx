@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-import { dummyCourses } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import humanizeDuration from "humanize-duration";
 import { useAuth, useUser } from "@clerk/clerk-react";
@@ -35,7 +34,7 @@ export const AppContextProvider = (props) => {
   };
 
   const fetchUserData = async () => {
-    if (user.publicMetadata.role === "eduactor") {
+    if (user.publicMetadata.role === "educator") {
       setIsEducator(true);
     }
     try {
