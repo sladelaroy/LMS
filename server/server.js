@@ -14,7 +14,20 @@ const app = express();
 await connectDB();
 await connectCloudinary();
 
-app.use(cors());
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || ["*"]; // Default to all if not specified
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // Allow cookies, authentication headers
+};
+
+app.use(cors(corsOptions));
 app.use(clerkMiddleware());
 
 app.get("/", (req, res) => {
