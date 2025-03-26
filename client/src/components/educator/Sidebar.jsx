@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   return (
     isEducator && (
-      <div className="md:w-64 border-r min-h-screen text-base border-gray-500 py-2 flex flex-col">
+      <div className="md:w-64 border-r min-h-screen text-base border-gray-500 py-2 px-3 flex flex-col">
         {menuItems.map((item) => {
           return (
             <NavLink
